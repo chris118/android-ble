@@ -2,6 +2,11 @@ package com.hhit.hhble;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothProfile;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -26,19 +31,18 @@ import java.util.concurrent.Executors;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int REQUEST_ENABLE_BT = 0xffff;
 
     @BindView(R.id.id_recyclerview)
     RecyclerView mRecycleView;
 
     private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private static final int REQUEST_ENABLE_BT = 0x001;
-
     private Executor mScanTaskService = null;
     private HashMap<String, String> mDeviceList = new HashMap<>();
     private MainAdapter mAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,23 +73,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init(){
-        detectBle();
         askBle();
         initData();
     }
 
-    private void detectBle(){
-
+    private void askBle(){
         // 检查当前手机是否支持ble 蓝牙,如果不支持退出程序
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Toast.makeText(this, "phone has no the BLE !", Toast.LENGTH_LONG).show();
             finish();
-        }else{
-            Toast.makeText(this, "phone has the BLE !", Toast.LENGTH_LONG).show();
         }
-    }
-
-    private void askBle(){
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -97,11 +93,17 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.setOnItemClickLitener(new MainAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
-                Log.d(TAG, String.valueOf(position));
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        String.valueOf(position), Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+                mBluetoothAdapter.stopLeScan(mLeScanCallback); //停止搜索
+
+
+                String address = (String)mDeviceList.keySet().toArray()[position];
+                String name = mDeviceList.get(address);
+
+                Intent intent = new Intent(MainActivity.this, DeviceControlActivity.class);
+                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, address);
+                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, name);
+
+                startActivity(intent);
             }
 
             @Override
@@ -145,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
                     if(name == null){
                         name = "unknow name";
                     }
-                    Log.e(TAG, address);
-                    Log.e(TAG, name);
+                    //Log.e(TAG, address);
+                    //Log.e(TAG, name);
 
                     mDeviceList.put(address, name);
                     mAdapter.notifyDataSetChanged();

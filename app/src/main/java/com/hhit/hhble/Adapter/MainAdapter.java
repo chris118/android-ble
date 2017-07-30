@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.hhit.hhble.R;
 
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by xiaopeng on 2017/7/29.
@@ -74,7 +73,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     @Override
     public void onBindViewHolder(MainViewHolder holder, int position) {
         String fullName = (String) mDeviceList.values().toArray()[position];
-        holder.tv.setText(fullName);
+        String address = (String) mDeviceList.keySet().toArray()[position];
+        holder.tv_name.setText(fullName);
+        holder.tv_address.setText(address);
     }
 
     @Override
@@ -84,11 +85,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
     static class MainViewHolder extends RecyclerView.ViewHolder
     {
-        TextView tv;
+        TextView tv_name;
+        TextView tv_address;
+
         public MainViewHolder(View view)
         {
             super(view);
-            tv = (TextView) view.findViewById(R.id.holder_name);
+            tv_name = (TextView) view.findViewById(R.id.holder_name);
+            tv_address = (TextView) view.findViewById(R.id.holder_address);
         }
     }
 }
