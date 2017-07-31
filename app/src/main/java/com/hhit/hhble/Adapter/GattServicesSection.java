@@ -6,14 +6,9 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.hhit.hhble.R;
-
 import java.util.ArrayList;
-import java.util.List;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
@@ -46,6 +41,7 @@ public class GattServicesSection extends StatelessSection {
         return new ItemViewHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
         final ItemViewHolder itemHolder = (ItemViewHolder) holder;
@@ -69,7 +65,6 @@ public class GattServicesSection extends StatelessSection {
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
-
         headerHolder.tvTitle.setText(this.mGattService.getUuid().toString());
     }
 
@@ -79,7 +74,6 @@ public class GattServicesSection extends StatelessSection {
 
         HeaderViewHolder(View view) {
             super(view);
-
             tvTitle = (TextView) view.findViewById(R.id.tvTitle);
         }
     }

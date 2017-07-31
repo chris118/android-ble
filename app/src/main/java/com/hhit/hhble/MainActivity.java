@@ -74,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init(){
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setTitle("blabal");
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+
         askBle();
         initData();
     }

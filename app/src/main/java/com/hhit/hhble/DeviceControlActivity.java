@@ -16,6 +16,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.hhit.hhble.Adapter.GattServicesSection;
@@ -68,6 +71,11 @@ public class DeviceControlActivity extends AppCompatActivity {
         mDeviceAddress_tv.setText(mDeviceAddress);
         mDeviceName_tv.setText(mDeviceName);
 
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
@@ -99,6 +107,40 @@ public class DeviceControlActivity extends AppCompatActivity {
         super.onDestroy();
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.services_menu, menu);
+
+        if (mConnected) {
+            menu.findItem(R.id.menu_connect).setVisible(false);
+            menu.findItem(R.id.menu_disconnect).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_connect).setVisible(true);
+            menu.findItem(R.id.menu_disconnect).setVisible(false);
+        }
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            case R.id.menu_connect:
+                mBluetoothLeService.connect(mDeviceAddress);
+                return true;
+            case R.id.menu_disconnect:
+                mBluetoothLeService.disconnect();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     // Code to manage Service lifecycle.
@@ -147,6 +189,9 @@ public class DeviceControlActivity extends AppCompatActivity {
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 String data = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
             }
+
+            updateState(mConnected);
+            invalidateOptionsMenu();
         }
     };
 
@@ -205,5 +250,11 @@ public class DeviceControlActivity extends AppCompatActivity {
         }
 
         mSectionAdapter.notifyDataSetChanged();
+    }
+
+    private void updateState(Boolean bConnected){
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setTitle(bConnected? "已连接": "断开连接");
+        }
     }
 }
