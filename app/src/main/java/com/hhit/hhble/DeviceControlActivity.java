@@ -13,36 +13,68 @@ import android.os.IBinder;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.TextView;
 
-import com.hhit.hhble.R;
+import com.hhit.hhble.Adapter.GattServicesSection;
 import com.hhit.hhble.Service.BluetoothLeService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
+
 public class DeviceControlActivity extends AppCompatActivity {
     private static final String TAG = DeviceControlActivity.class.getSimpleName();
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
+
+    @BindView(R.id.id_recyclerview)
+    RecyclerView mRecycleView;
+
+    @BindView(R.id.tv_device_name)
+    TextView mDeviceName_tv;
+
+    @BindView(R.id.tv_device_id)
+    TextView mDeviceAddress_tv;
 
     private String mDeviceName;
     private String mDeviceAddress;
     private BluetoothLeService mBluetoothLeService;
     private boolean mConnected = false;
 
+    private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
+            new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
+    ArrayList<BluetoothGattService> mGattServices = new ArrayList<BluetoothGattService>();
+
+    private SectionedRecyclerViewAdapter mSectionAdapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_control);
+        ButterKnife.bind(this);
 
         Intent intent = getIntent();
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
 
+        mDeviceAddress_tv.setText(mDeviceAddress);
+        mDeviceName_tv.setText(mDeviceName);
+
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
+
+        mSectionAdapter = new SectionedRecyclerViewAdapter();
+        mRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        mRecycleView.setAdapter(mSectionAdapter);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -125,21 +157,33 @@ public class DeviceControlActivity extends AppCompatActivity {
 
         // Loops through available GATT Services.
         for (BluetoothGattService gattService : gattServices) {
-            HashMap<String, String> currentServiceData = new HashMap<String, String>();
             uuid = gattService.getUuid().toString();
             Log.d(TAG, "gattService: " + uuid);
+
+            // feed all gattService
+            if(!mGattServices.contains(gattService)){
+                mGattServices.add(gattService);
+            }
 
             List<BluetoothGattCharacteristic> gattCharacteristics =
                     gattService.getCharacteristics();
 
+            // feed all gattCharacteristics
+            ArrayList<BluetoothGattCharacteristic> charas =
+                    new ArrayList<BluetoothGattCharacteristic>();
             // Loops through available Characteristics.
             for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
-                HashMap<String, String> currentCharaData = new HashMap<String, String>();
                 uuid = gattCharacteristic.getUuid().toString();
                 Log.d(TAG, "gattCharacteristic: " + uuid);
 
+                if(!charas.contains(gattCharacteristic)){
+                    charas.add(gattCharacteristic);
+                }
             }
+            mGattCharacteristics.add(charas);
         }
+
+        feedData();
     }
 
     private static IntentFilter makeGattUpdateIntentFilter() {
@@ -151,4 +195,15 @@ public class DeviceControlActivity extends AppCompatActivity {
         return intentFilter;
     }
 
+    private void feedData(){
+        for (int i = 0; i < mGattServices.size(); i++) {
+            BluetoothGattService gattService = mGattServices.get(i);
+            ArrayList<BluetoothGattCharacteristic> characteristics = mGattCharacteristics.get(i);
+            if(characteristics.size() > 0){
+                mSectionAdapter.addSection(new GattServicesSection(gattService, characteristics));
+            }
+        }
+
+        mSectionAdapter.notifyDataSetChanged();
+    }
 }

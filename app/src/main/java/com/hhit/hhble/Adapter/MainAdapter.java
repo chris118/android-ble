@@ -1,14 +1,18 @@
 package com.hhit.hhble.Adapter;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.hhit.hhble.MainActivity;
 import com.hhit.hhble.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -16,6 +20,8 @@ import java.util.HashMap;
  */
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder>  {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     public interface OnItemClickLitener
     {
@@ -31,10 +37,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     }
 
     private LayoutInflater mInflater;
-    HashMap<String, String> mDeviceList;
+    ArrayList<BluetoothDevice> mDeviceList;
 
-    public MainAdapter(Context context, HashMap<String, String> datas) {
-        this.mDeviceList = datas;
+    public MainAdapter(Context context, ArrayList<BluetoothDevice> devices) {
+        this.mDeviceList = devices;
         mInflater = LayoutInflater.from(context);
     }
 
@@ -72,9 +78,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
     @Override
     public void onBindViewHolder(MainViewHolder holder, int position) {
-        String fullName = (String) mDeviceList.values().toArray()[position];
-        String address = (String) mDeviceList.keySet().toArray()[position];
-        holder.tv_name.setText(fullName);
+        String name = mDeviceList.get(position).getName();
+        String address = mDeviceList.get(position).getAddress();
+        if(name == null){
+            name = "N/A";
+        }
+        holder.tv_name.setText(name);
         holder.tv_address.setText(address);
     }
 

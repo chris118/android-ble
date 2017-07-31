@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.hhit.hhble.Adapter.MainAdapter;
 import com.hhit.hhble.View.RecycleViewDivider;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private Executor mScanTaskService = null;
-    private HashMap<String, String> mDeviceList = new HashMap<>();
+    private ArrayList<BluetoothDevice> mDeviceList = new ArrayList<>();
     private MainAdapter mAdapter;
 
     @Override
@@ -96,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
                 mBluetoothAdapter.stopLeScan(mLeScanCallback); //停止搜索
 
 
-                String address = (String)mDeviceList.keySet().toArray()[position];
-                String name = mDeviceList.get(address);
+                String address = mDeviceList.get(position).getAddress();
+                String name = mDeviceList.get(position).getName();
 
                 Intent intent = new Intent(MainActivity.this, DeviceControlActivity.class);
                 intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, address);
@@ -144,13 +145,11 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     String address = device.getAddress(); //获取蓝牙设备mac地址
                     String name = device.getName();  //获取蓝牙设备名字
-                    if(name == null){
-                        name = "unknow name";
-                    }
                     //Log.e(TAG, address);
                     //Log.e(TAG, name);
-
-                    mDeviceList.put(address, name);
+                    if(!mDeviceList.contains(device)) {
+                        mDeviceList.add(device);
+                    }
                     mAdapter.notifyDataSetChanged();
                 }
             });
