@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:layout_marginLeft="15dp"
+    android:layout_marginLeft="0dp"
+    android:background="@android:color/darker_gray"
     android:visibility="visible">
 
     <TextView
@@ -11,6 +12,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
         android:gravity="center_vertical"
         android:text="service:"
         android:textColor="@color/colorPrimary"
