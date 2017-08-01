@@ -15,6 +15,8 @@ import com.hhit.hhble.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static android.R.attr.name;
+
 /**
  * Created by xiaopeng on 2017/7/29.
  */
@@ -37,9 +39,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     }
 
     private LayoutInflater mInflater;
-    ArrayList<BluetoothDevice> mDeviceList;
+    HashMap<BluetoothDevice, Boolean>  mDeviceList;
 
-    public MainAdapter(Context context, ArrayList<BluetoothDevice> devices) {
+    public MainAdapter(Context context, HashMap<BluetoothDevice, Boolean>  devices) {
         this.mDeviceList = devices;
         mInflater = LayoutInflater.from(context);
     }
@@ -78,13 +80,23 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
 
     @Override
     public void onBindViewHolder(MainViewHolder holder, int position) {
-        String name = mDeviceList.get(position).getName();
-        String address = mDeviceList.get(position).getAddress();
+        BluetoothDevice device = (BluetoothDevice) mDeviceList.keySet().toArray()[position];
+        Boolean state = mDeviceList.get(device);
+
+        String name = device.getName();
+        String address = device.getAddress();
+
         if(name == null){
             name = "N/A";
         }
         holder.tv_name.setText(name);
         holder.tv_address.setText(address);
+        if (state) {
+            holder.tv_status.setText("脱落");
+        } else {
+            holder.tv_status.setText("在位");
+        }
+        holder.tv_status.setText(state.toString());
     }
 
     @Override
@@ -96,12 +108,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
     {
         TextView tv_name;
         TextView tv_address;
+        TextView tv_status;
 
         public MainViewHolder(View view)
         {
             super(view);
             tv_name = (TextView) view.findViewById(R.id.holder_name);
             tv_address = (TextView) view.findViewById(R.id.holder_address);
+            tv_status = (TextView) view.findViewById(R.id.holder_state);
         }
     }
 }

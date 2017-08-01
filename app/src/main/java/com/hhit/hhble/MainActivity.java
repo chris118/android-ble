@@ -26,8 +26,12 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.hhit.hhble.Adapter.MainAdapter;
+import com.hhit.hhble.Util.Tools;
 import com.hhit.hhble.View.LoadingDialog;
 import com.hhit.hhble.View.RecycleViewDivider;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,11 +53,11 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.id_recyclerview)
     RecyclerView mRecycleView;
 
-    LoadingDialog mLoadingDialog;
+//    LoadingDialog mLoadingDialog;
 
 
     private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private ArrayList<BluetoothDevice> mDeviceList = new ArrayList<>();
+    private HashMap<BluetoothDevice, Boolean> mDeviceList = new HashMap<>();
     private MainAdapter mAdapter;
 
     @Override
@@ -122,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         if (getSupportActionBar() != null){
             getSupportActionBar().setTitle("Devices");
         }
-        mLoadingDialog = new LoadingDialog(this);
+//        mLoadingDialog = new LoadingDialog(this);
         mHandler = new Handler();
         askBle();
         initData();
@@ -144,17 +148,17 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.setOnItemClickLitener(new MainAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
-                mBluetoothAdapter.stopLeScan(mLeScanCallback); //停止搜索
-
-
-                String address = mDeviceList.get(position).getAddress();
-                String name = mDeviceList.get(position).getName();
-
-                Intent intent = new Intent(MainActivity.this, DeviceControlActivity.class);
-                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, address);
-                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, name);
-
-                startActivity(intent);
+//                mBluetoothAdapter.stopLeScan(mLeScanCallback); //停止搜索
+//
+//
+//                String address = mDeviceList.get(position).getAddress();
+//                String name = mDeviceList.get(position).getName();
+//
+//                Intent intent = new Intent(MainActivity.this, DeviceControlActivity.class);
+//                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, address);
+//                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, name);
+//
+//                startActivity(intent);
             }
 
             @Override
@@ -178,42 +182,72 @@ public class MainActivity extends AppCompatActivity {
 
     private void scanLeDevice(final boolean enable) {
         if (enable) {
-            // Stops scanning after a pre-defined scan period.
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mScanning = false;
-                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
-                    mLoadingDialog.dismiss();
-                    invalidateOptionsMenu();
-                }
-            }, SCAN_PERIOD);
+//            // Stops scanning after a pre-defined scan period.
+//            mHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mScanning = false;
+//                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+//                    mLoadingDialog.dismiss();
+//                    invalidateOptionsMenu();
+//                }
+//            }, SCAN_PERIOD);
 
             mScanning = true;
-            mLoadingDialog.show();
+//            mLoadingDialog.show();
             mBluetoothAdapter.startLeScan(mLeScanCallback);
         } else {
             mScanning = false;
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
-            mLoadingDialog.dismiss();
+//            mLoadingDialog.dismiss();
         }
         invalidateOptionsMenu();
     }
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
-        public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+        public void onLeScan(final BluetoothDevice device, int rssi, final byte[] scanRecord) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    String address = device.getAddress(); //获取蓝牙设备mac地址
-                    String name = device.getName();  //获取蓝牙设备名字
-                    //Log.e(TAG, address);
-                    //Log.e(TAG, name);
-                    if(!mDeviceList.contains(device)) {
-                        mDeviceList.add(device);
+                    JSONObject scanJson = Tools.decodeAdvData(scanRecord);
+                    String servicedata = null;
+                    try {
+                        servicedata = scanJson.getString(Tools.SERVICE_DATA);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    mAdapter.notifyDataSetChanged();
+
+                    if (servicedata != null && servicedata.startsWith("E1FFA102"))
+                    {
+                        //资产标签
+                        byte data = Byte.parseByte(servicedata.substring(10, 12));
+                        int battery = Integer.parseInt(servicedata.substring(8, 10), 16);
+                        boolean state = ((data & (byte) (1)) != 0);
+                        if (state) {
+                            Log.i("state", "脱落");
+                        } else {
+                            Log.i("state", "在位");
+                        }
+                        //小端对齐，需要自己转（给ios取mac地址的，因为ios拿不到地址）
+                        //android 可以直接获取mac地址
+                        String address = device.getAddress();
+                        String macaddress = servicedata.substring(12, 18);
+
+                        if(!mDeviceList.containsKey(device)) {
+                            mDeviceList.put(device, state);
+                        }
+                        mAdapter.notifyDataSetChanged();
+                    }
+
+//                    String address = device.getAddress(); //获取蓝牙设备mac地址
+//                    String name = device.getName();  //获取蓝牙设备名字
+//                    //Log.e(TAG, address);
+//                    //Log.e(TAG, name);
+//                    if(!mDeviceList.contains(device)) {
+//                        mDeviceList.add(device);
+//                    }
+//                    mAdapter.notifyDataSetChanged();
                 }
             });
         }
