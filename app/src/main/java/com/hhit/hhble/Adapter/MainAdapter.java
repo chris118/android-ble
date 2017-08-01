@@ -96,7 +96,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         } else {
             holder.tv_status.setText("在位");
         }
-        holder.tv_status.setText(state.toString());
     }
 
     @Override

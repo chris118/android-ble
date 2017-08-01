@@ -234,7 +234,10 @@ public class MainActivity extends AppCompatActivity {
                         String address = device.getAddress();
                         String macaddress = servicedata.substring(12, 18);
 
-                        if(!mDeviceList.containsKey(device)) {
+                        if(mDeviceList.containsKey(device)) {
+                            mDeviceList.remove(device);
+                            mDeviceList.put(device, state);
+                        }else {
                             mDeviceList.put(device, state);
                         }
                         mAdapter.notifyDataSetChanged();
