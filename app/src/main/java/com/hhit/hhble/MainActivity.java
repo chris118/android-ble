@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,10 +19,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.hhit.hhble.Adapter.MainAdapter;
+import com.hhit.hhble.View.LoadingDialog;
 import com.hhit.hhble.View.RecycleViewDivider;
 
 import java.util.ArrayList;
@@ -35,13 +40,19 @@ import butterknife.ButterKnife;
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int REQUEST_ENABLE_BT = 0xffff;
+    private boolean mScanning;
+    private Handler mHandler;
+    private static final int REQUEST_ENABLE_BT = 1;
+    // Stops scanning after 10 seconds.
+    private static final long SCAN_PERIOD = 3000;
 
     @BindView(R.id.id_recyclerview)
     RecyclerView mRecycleView;
 
+    LoadingDialog mLoadingDialog;
+
+
     private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private Executor mScanTaskService = null;
     private ArrayList<BluetoothDevice> mDeviceList = new ArrayList<>();
     private MainAdapter mAdapter;
 
@@ -56,8 +67,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        scanLeDevice(true);
+    }
 
-        scanBle();
+    @Override
+    protected void onPause() {
+        super.onPause();
+        scanLeDevice(false);
     }
 
     @Override
@@ -73,12 +89,41 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void init(){
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setTitle("blabal");
-            getSupportActionBar().setHomeButtonEnabled(true);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+
+        if (mScanning) {
+            menu.findItem(R.id.menu_scan).setVisible(false);
+            menu.findItem(R.id.menu_stop).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_scan).setVisible(true);
+            menu.findItem(R.id.menu_stop).setVisible(false);
         }
 
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_scan:
+                scanLeDevice(true);
+                break;
+            case R.id.menu_stop:
+                scanLeDevice(false);
+                break;
+        }
+        return true;
+    }
+
+    private void init(){
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setTitle("Devices");
+        }
+        mLoadingDialog = new LoadingDialog(this);
+        mHandler = new Handler();
         askBle();
         initData();
     }
@@ -129,19 +174,32 @@ public class MainActivity extends AppCompatActivity {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecycleView.setLayoutManager(layoutManager);
         mRecycleView.addItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.VERTICAL));
-
     }
 
-    private void scanBle(){
-        mScanTaskService = Executors.newSingleThreadExecutor();
-        mScanTaskService.execute(new Runnable() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-            @Override
-            public void run() {
-                mBluetoothAdapter.startLeScan(mLeScanCallback); //开始搜索
-            }
-        });
+    private void scanLeDevice(final boolean enable) {
+        if (enable) {
+            // Stops scanning after a pre-defined scan period.
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mScanning = false;
+                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    mLoadingDialog.dismiss();
+                    invalidateOptionsMenu();
+                }
+            }, SCAN_PERIOD);
+
+            mScanning = true;
+            mLoadingDialog.show();
+            mBluetoothAdapter.startLeScan(mLeScanCallback);
+        } else {
+            mScanning = false;
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            mLoadingDialog.dismiss();
+        }
+        invalidateOptionsMenu();
     }
+
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {

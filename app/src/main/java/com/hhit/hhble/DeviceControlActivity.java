@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import android.widget.TextView;
 
 import com.hhit.hhble.Adapter.GattServicesSection;
 import com.hhit.hhble.Service.BluetoothLeService;
+import com.hhit.hhble.View.LoadingDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +53,8 @@ public class DeviceControlActivity extends AppCompatActivity {
     private String mDeviceAddress;
     private BluetoothLeService mBluetoothLeService;
     private boolean mConnected = false;
+    LoadingDialog mLoadingDialog;
+
 
     private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
             new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
@@ -71,6 +76,8 @@ public class DeviceControlActivity extends AppCompatActivity {
         mDeviceAddress_tv.setText(mDeviceAddress);
         mDeviceName_tv.setText(mDeviceName);
 
+        mLoadingDialog = new LoadingDialog(this);
+
         if (getSupportActionBar() != null){
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -78,7 +85,6 @@ public class DeviceControlActivity extends AppCompatActivity {
 
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-
 
         mSectionAdapter = new SectionedRecyclerViewAdapter();
         mRecycleView.setLayoutManager(new LinearLayoutManager(this));
@@ -89,11 +95,9 @@ public class DeviceControlActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-        if (mBluetoothLeService != null) {
-            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
-            Log.d(TAG, "Connect request result=" + result);
-        }
+        connect();
     }
 
     @Override
@@ -133,7 +137,7 @@ public class DeviceControlActivity extends AppCompatActivity {
                 this.finish();
                 return true;
             case R.id.menu_connect:
-                mBluetoothLeService.connect(mDeviceAddress);
+                connect();
                 return true;
             case R.id.menu_disconnect:
                 mBluetoothLeService.disconnect();
@@ -189,7 +193,7 @@ public class DeviceControlActivity extends AppCompatActivity {
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 String data = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
             }
-
+            mLoadingDialog.dismiss();
             updateState(mConnected);
             invalidateOptionsMenu();
         }
@@ -256,5 +260,19 @@ public class DeviceControlActivity extends AppCompatActivity {
         if (getSupportActionBar() != null){
             getSupportActionBar().setTitle(bConnected? "已连接": "断开连接");
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private void connect(){
+        mLoadingDialog.show();
+        if (mBluetoothLeService != null) {
+            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
+        }
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mLoadingDialog.dismiss();
+            }
+        }, 10000);
     }
 }
