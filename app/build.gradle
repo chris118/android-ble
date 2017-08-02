@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'hhit'
             keyPassword '111111'
-            storeFile file('/Users/admin/hh/keystore_hhit_111111.jks')
+            storeFile file('/Users/admin/hhit/keystore_hhit_111111.jks')
             storePassword '111111'
         }
     }
