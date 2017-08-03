@@ -3,9 +3,11 @@ package com.hhit.hhble;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.BluetoothLeScanner;
-import android.bluetooth.le.ScanResult;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothProfile;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -20,7 +22,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,12 +31,16 @@ import android.widget.Toast;
 
 import com.hhit.hhble.Adapter.MainAdapter;
 import com.hhit.hhble.Util.Tools;
+import com.hhit.hhble.View.LoadingDialog;
 import com.hhit.hhble.View.RecycleViewDivider;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private BluetoothLeScanner mBluetoothLeScanner = null;
     private HashMap<BluetoothDevice, Boolean> mDeviceList = new HashMap<>();
     private MainAdapter mAdapter;
 
@@ -165,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
      校验蓝牙权限
     */
     private void checkBluetoothPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){ // >= 6.0
+        if (Build.VERSION.SDK_INT >= 23) {
             //校验是否已具有模糊定位权限
             if (ContextCompat.checkSelfPermission(MainActivity.this,
                     Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -188,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.setOnItemClickLitener(new MainAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
-//                stopScan(); //停止搜索
+//                mBluetoothAdapter.stopLeScan(mLeScanCallback); //停止搜索
 //
 //
 //                String address = mDeviceList.get(position).getAddress();
@@ -221,89 +225,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void scanLeDevice(final boolean enable) {
-        if(mBluetoothLeScanner == null){
-            mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
-        }
         if (enable) {
 //            // Stops scanning after a pre-defined scan period.
 //            mHandler.postDelayed(new Runnable() {
 //                @Override
 //                public void run() {
-//                  stopScan();
+//                    mScanning = false;
+//                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+//                    mLoadingDialog.dismiss();
+//                    invalidateOptionsMenu();
 //                }
 //            }, SCAN_PERIOD);
 
             mScanning = true;
 //            mLoadingDialog.show();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                mBluetoothLeScanner.startScan(mScanCallback);
-            }else{
-                mBluetoothAdapter.startLeScan(mLeScanCallback);
-            }
+            mBluetoothAdapter.startLeScan(mLeScanCallback);
         } else {
-            stopScan();
+            mScanning = false;
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+//            mLoadingDialog.dismiss();
         }
         invalidateOptionsMenu();
     }
-
-    private void stopScan(){
-        mScanning = false;
-//            mLoadingDialog.dismiss();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mBluetoothLeScanner.stopScan(mScanCallback);
-        }else{
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
-        }
-    }
-
-    private ScanCallback mScanCallback = new ScanCallback() {
-        @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            super.onScanResult(callbackType, result);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                BluetoothDevice device = result.getDevice();
-                JSONObject scanJson = Tools.decodeAdvData(result.getScanRecord().getBytes());
-                    String servicedata = null;
-                    try {
-                        servicedata = scanJson.getString(Tools.SERVICE_DATA);
-                    } catch (JSONException e) {
-//                        e.printStackTrace();
-                    }
-
-                    if (servicedata != null && servicedata.startsWith("E1FFA102"))
-                    {
-                        //资产标签
-                        byte data = Byte.parseByte(servicedata.substring(10, 12));
-                        int battery = Integer.parseInt(servicedata.substring(8, 10), 16);
-                        boolean state = ((data & (byte) (1)) != 0);
-                        if (state) {
-                            Log.i("state", "脱落");
-                        } else {
-                            Log.i("state", "在位");
-                        }
-                        //小端对齐，需要自己转（给ios取mac地址的，因为ios拿不到地址）
-                        //android 可以直接获取mac地址
-//                        String address = device.getAddress();
-//                        String macaddress = servicedata.substring(12, 18);
-
-                        if(mDeviceList.containsKey(device)) {
-                            mDeviceList.remove(device);
-                            mDeviceList.put(device, state);
-                        }else {
-                            mDeviceList.put(device, state);
-                        }
-                        mAdapter.notifyDataSetChanged();
-                    }
-            }
-        }
-
-        @Override
-        public void onScanFailed(int errorCode) {
-            super.onScanFailed(errorCode);
-            Log.e(TAG, "搜索失败");
-            Toast.makeText(getApplicationContext(), "搜索失败", Toast.LENGTH_SHORT).show();
-        }
-    };
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
@@ -343,6 +286,15 @@ public class MainActivity extends AppCompatActivity {
                         }
                         mAdapter.notifyDataSetChanged();
                     }
+
+//                    String address = device.getAddress(); //获取蓝牙设备mac地址
+//                    String name = device.getName();  //获取蓝牙设备名字
+//                    //Log.e(TAG, address);
+//                    //Log.e(TAG, name);
+//                    if(!mDeviceList.contains(device)) {
+//                        mDeviceList.add(device);
+//                    }
+//                    mAdapter.notifyDataSetChanged();
                 }
             });
         }
