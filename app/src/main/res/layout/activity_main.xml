@@ -5,6 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.hhit.hhble.MainActivity">
+    <com.hhit.hhble.widget.NavigationBar
+        style="@style/style_navigation_bar"
+        class="com.putao.chat.widget.NavigationBar"
+        android:layout_width="match_parent"
+        app:nav_main_title="首页">
+
+    </com.hhit.hhble.widget.NavigationBar>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/id_recyclerview"
         android:divider="#ffff0000"

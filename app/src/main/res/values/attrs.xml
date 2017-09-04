@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--NavigationBar-->
+    <declare-styleable name="NavigationBar">
+        <attr name="nav_left_icon" format="reference" />
+        <attr name="nav_right_icon" format="reference" />
+        <attr name="nav_main_title" format="string" />
+        <attr name="nav_main_title_color" format="color" />
+        <attr name="nav_main_title_size" format="dimension|reference" />
+        <attr name="nav_left_title" format="string" />
+        <attr name="nav_left_title_color" format="color" />
+        <attr name="nav_left_title_size" format="dimension|reference" />
+        <attr name="nav_right_title" format="string" />
+        <attr name="nav_right_title_color" format="color" />
+        <attr name="nav_right_title_size" format="dimension|reference" />
+        <attr name="nav_divider_color" format="color" />
+        <attr name="nav_has_divider" format="boolean" />
+    </declare-styleable>
+
+    <!--ImageDraweeView-->
+    <declare-styleable name="ImageDraweeView">
+        <attr name="aspect_ratio" format="float" />
+        <attr name="default_drawable" format="reference" />
+    </declare-styleable>
+</resources>
