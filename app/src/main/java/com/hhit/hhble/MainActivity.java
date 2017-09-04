@@ -192,17 +192,26 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.setOnItemClickLitener(new MainAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
-//                mBluetoothAdapter.stopLeScan(mLeScanCallback); //停止搜索
-//
-//
-//                String address = mDeviceList.get(position).getAddress();
-//                String name = mDeviceList.get(position).getName();
-//
-//                Intent intent = new Intent(MainActivity.this, DeviceControlActivity.class);
-//                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, address);
-//                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, name);
-//
-//                startActivity(intent);
+                mBluetoothAdapter.stopLeScan(mLeScanCallback); //停止搜索
+
+
+                int index = 0;
+                String address = null;
+                String name = null;
+                for(BluetoothDevice device : mDeviceList.keySet()){
+                    if(index == position){
+                        address = device.getAddress();
+                        name = device.getName();
+                        break;
+                    }
+                    index++;
+                }
+
+                Intent intent = new Intent(MainActivity.this, DeviceControlActivity.class);
+                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, address);
+                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, name);
+
+                startActivity(intent);
             }
 
             @Override
