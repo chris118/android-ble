@@ -167,6 +167,7 @@ public abstract class BaseFragment extends Fragment {
         dismiss();
         if(mUnbinder != null){
             mUnbinder.unbind();
+            mUnbinder = null;
         }
         mActivity = null;
     }

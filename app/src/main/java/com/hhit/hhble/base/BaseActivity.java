@@ -198,6 +198,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         dismiss();
         if(mUnbinder != null){
             mUnbinder.unbind();
+            mUnbinder = null;
         }
         mContext = null;
     }

@@ -1,6 +1,7 @@
 package com.hhit.hhble;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
@@ -40,15 +41,22 @@ public class HHDevicesActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        initFragments();
+        setDefaultFragment();
         initBottomNavigationBar();
     }
 
-    private void initFragments(){
+    private void setDefaultFragment()
+    {
         mFragments = new BaseFragment[2];
         mFragments[0] = new HHBindFragment();
         mFragments[1] = new HHTransportFragment();
+
+
+        FragmentTransaction transaction =  mContext.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frameLayout, mFragments[0]);
+        transaction.commit();
     }
+
 
     private void initBottomNavigationBar() {
         mBottomNavigationBar.setMode(BottomNavigationBar.MODE_DEFAULT);
@@ -64,30 +72,32 @@ public class HHDevicesActivity extends BaseActivity {
         mBottomNavigationBar.setTabSelectedListener(new BottomNavigationBar.SimpleOnTabSelectedListener() {
                 @Override
                 public void onTabSelected(int position) {
-                    showFragment(position);
-                }
+                    FragmentTransaction transaction =  mContext.getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.frameLayout, mFragments[position]);
+                    transaction.commit();                }
             }
         );
 
         mBottomNavigationBar.selectTab(0);
-        showFragment(0);
+//        showFragment(1);
+//        showFragment(0);
     }
 
-    private void showFragment(int position){
-        BaseFragment fragment = mFragments[position];
-        FragmentTransaction ft = mContext.getSupportFragmentManager().beginTransaction();
-        android.support.v4.app.Fragment oldFragment = mContext.getSupportFragmentManager().findFragmentById(R.id.frameLayout);
-
-        if (oldFragment == null) {
-            ft.add(R.id.frameLayout, fragment);
-        } else {
-            ft.detach(oldFragment);
-            if (mFragments[position] == null) {
-                ft.add(R.id.frameLayout, fragment);
-            } else {
-                ft.attach(fragment);
-            }
-        }
-        ft.commit();
-    }
+//    private void showFragment(int position){
+//        BaseFragment fragment = mFragments[position];
+//        FragmentTransaction ft = mContext.getSupportFragmentManager().beginTransaction();
+//        android.support.v4.app.Fragment oldFragment = mContext.getSupportFragmentManager().findFragmentById(R.id.frameLayout);
+//
+//        if (oldFragment == null) {
+//            ft.add(R.id.frameLayout, fragment);
+//        } else {
+//            ft.detach(oldFragment);
+//            if (mFragments[position] == null) {
+//                ft.add(R.id.frameLayout, fragment);
+//            } else {
+//                ft.attach(fragment);
+//            }
+//        }
+//        ft.commit();
+//    }
 }

@@ -10,6 +10,7 @@ import com.hhit.hhble.base.BaseFragment;
 import com.hhit.hhble.base.HHItemClickLitener;
 import com.hhit.hhble.bean.HHDeviceBean;
 import com.hhit.hhble.bean.HHFyyjArgu;
+import com.hhit.hhble.widget.RecycleViewDivider;
 import com.hhit.hhble.widget.xrecyclerview.XRecyclerView;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
@@ -61,6 +62,7 @@ public class HHBindFragment extends BaseFragment{
         LinearLayoutManager llmanager = new LinearLayoutManager(mActivity);
         llmanager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llmanager);
+        mRecyclerView.addItemDecoration(new RecycleViewDivider(mActivity, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
     }
 
