@@ -25,6 +25,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.hhit.hhble.adapter.MainAdapter;
+import com.hhit.hhble.base.BaseActivity;
+import com.hhit.hhble.bean.HHDeviceBean;
 import com.hhit.hhble.util.Tools;
 import com.hhit.hhble.widget.RecycleViewDivider;
 
@@ -37,7 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 100;
     private boolean mScanning;
@@ -45,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 1;
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 3000;
+
+
+    private  HHDeviceBean mDevice;
 
     @BindView(R.id.id_recyclerview)
     RecyclerView mRecycleView;
@@ -57,17 +62,20 @@ public class MainActivity extends AppCompatActivity {
     private MainAdapter mAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        init();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         checkBluetoothPermission();
+    }
+
+    @Override
+    protected int layoutResId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected void initView() {
+        mDevice = getIntent().getParcelableExtra("device");
+        init();
     }
 
     @Override
@@ -199,19 +207,19 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 Intent intent = new Intent(MainActivity.this, DeviceControlActivity.class);
-                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, address);
-                intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, name);
+                intent.putExtra("label_address", address);
+                intent.putExtra("label_name", name);
 
-                startActivity(intent);
+//                startActivity(intent);
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
-                Log.d(TAG, String.valueOf(position));
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        String.valueOf(position), Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+//                Log.d(TAG, String.valueOf(position));
+//                Toast toast = Toast.makeText(getApplicationContext(),
+//                        String.valueOf(position), Toast.LENGTH_SHORT);
+//                toast.setGravity(Gravity.CENTER, 0, 0);
+//                toast.show();
             }
         });
         mRecycleView.setAdapter(mAdapter);

@@ -11,7 +11,7 @@
     <com.hhit.hhble.widget.NavigationBar
         style="@style/style_navigation_bar"
         android:layout_width="match_parent"
-        app:nav_main_title="首页">
+        app:nav_main_title="设备列表">
 
     </com.hhit.hhble.widget.NavigationBar>
 

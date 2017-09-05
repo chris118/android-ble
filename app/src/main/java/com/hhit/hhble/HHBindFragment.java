@@ -1,5 +1,6 @@
 package com.hhit.hhble;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
@@ -25,6 +26,8 @@ public class HHBindFragment extends BaseFragment{
     @BindView(R.id.recyclerView)
     XRecyclerView mRecyclerView;
 
+    List<HHDeviceBean> mDevices = new ArrayList<>();
+
     @Override
     protected int layoutResId() {
         return R.layout.fragment_hhbind;
@@ -44,7 +47,9 @@ public class HHBindFragment extends BaseFragment{
         mAdapter.setHhItemClickLitener(new HHItemClickLitener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                Intent intent = new Intent(mActivity, MainActivity.class);
+                intent.putExtra("device", mDevices.get(position));
+                startActivity(intent);
             }
 
             @Override
@@ -60,13 +65,12 @@ public class HHBindFragment extends BaseFragment{
     }
 
     private void initData(){
-        List<HHDeviceBean> devices = new ArrayList<>();
-        devices.add(new HHDeviceBean("hhh", 0, "ddd"));
-        devices.add(new HHDeviceBean("hhh", 0, "ddd"));
-        devices.add(new HHDeviceBean("hhh", 0, "ddd"));
-        devices.add(new HHDeviceBean("hhh", 0, "ddd"));
+        mDevices.add(new HHDeviceBean("hhh", 0, "ddd"));
+        mDevices.add(new HHDeviceBean("hhh", 0, "ddd"));
+        mDevices.add(new HHDeviceBean("hhh", 0, "ddd"));
+        mDevices.add(new HHDeviceBean("hhh", 0, "ddd"));
 
-        mAdapter.setData(devices);
+        mAdapter.setData(mDevices);
     }
 
 

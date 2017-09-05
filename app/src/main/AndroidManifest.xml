@@ -25,7 +25,9 @@
 
         <activity android:name=".MainActivity"/>
         <activity android:name=".DeviceControlActivity"/> >
-        <activity android:name=".HHDevicesActivity">
+        <activity
+            android:name=".HHDevicesActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
