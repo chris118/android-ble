@@ -55,7 +55,7 @@
             android:layout_toLeftOf="@id/listview_header_text"
             android:src="@drawable/icon_24_arrow_refresh" />
 
-        <com.putao.library.widget.xrecyclerview.EasyProgress
+        <com.hhit.hhble.widget.xrecyclerview.EasyProgress
             android:id="@+id/listview_header_progressbar"
             android:layout_width="30dp"
             android:layout_height="30dp"

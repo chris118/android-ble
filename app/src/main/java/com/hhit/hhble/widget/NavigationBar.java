@@ -14,7 +14,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.hhit.hhble.base.BaseActivity;
 import com.hhit.hhble.R;
+
+import rx.functions.Action1;
 
 /**
  * 标题栏
@@ -190,6 +193,14 @@ public class NavigationBar extends RelativeLayout {
             mTvRightTitle.setTextColor(Color.parseColor("#959595"));
         }
         return mTvRightTitle;
+    }
+
+    public void setLeftClick(BaseActivity activity, Action1 action1){
+        activity.rxClick(mLeftView, action1);
+    }
+
+    public void setRightClick(BaseActivity activity, Action1 action1){
+        activity.rxClick(mRightView, action1);
     }
 
 }

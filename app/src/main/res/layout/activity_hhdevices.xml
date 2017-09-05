@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/color_ebebeb"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--app:nav_left_icon="@drawable/back_selector"-->
+    <com.hhit.hhble.widget.NavigationBar
+        style="@style/style_navigation_bar"
+        android:layout_width="match_parent"
+        app:nav_main_title="首页">
+
+    </com.hhit.hhble.widget.NavigationBar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.hhit.hhble.widget.xrecyclerview.XRecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+</LinearLayout>

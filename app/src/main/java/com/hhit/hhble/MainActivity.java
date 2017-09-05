@@ -3,11 +3,6 @@ package com.hhit.hhble;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCallback;
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattDescriptor;
-import android.bluetooth.BluetoothProfile;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -29,18 +24,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.hhit.hhble.Adapter.MainAdapter;
-import com.hhit.hhble.Util.Tools;
-import com.hhit.hhble.View.LoadingDialog;
-import com.hhit.hhble.View.RecycleViewDivider;
+import com.hhit.hhble.adapter.MainAdapter;
+import com.hhit.hhble.util.Tools;
+import com.hhit.hhble.widget.RecycleViewDivider;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

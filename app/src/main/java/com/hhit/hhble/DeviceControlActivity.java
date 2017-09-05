@@ -23,12 +23,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.hhit.hhble.Adapter.GattServicesSection;
-import com.hhit.hhble.Service.BluetoothLeService;
-import com.hhit.hhble.View.LoadingDialog;
+import com.hhit.hhble.adapter.GattServicesSection;
+import com.hhit.hhble.util.BluetoothLeService;
+import com.hhit.hhble.widget.LoadingDialog;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
