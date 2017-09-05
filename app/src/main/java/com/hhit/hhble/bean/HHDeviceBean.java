@@ -9,6 +9,12 @@ public class HHDeviceBean {
     private int state;
     private String desc;
 
+    public HHDeviceBean(String name, int state, String desc) {
+        this.name = name;
+        this.state = state;
+        this.desc = desc;
+    }
+
     public int getState() {
         return state;
     }

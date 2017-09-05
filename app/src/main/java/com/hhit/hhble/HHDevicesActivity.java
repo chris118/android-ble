@@ -1,7 +1,19 @@
 package com.hhit.hhble;
 
+import android.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.view.View;
+
+import com.ashokvarma.bottomnavigation.BadgeItem;
+import com.ashokvarma.bottomnavigation.BottomNavigationBar;
+import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.hhit.hhble.adapter.HHDevicesAdapter;
 import com.hhit.hhble.api.HHStartTransportApi;
 import com.hhit.hhble.base.BaseActivity;
+import com.hhit.hhble.base.BaseFragment;
+import com.hhit.hhble.base.HHItemClickLitener;
+import com.hhit.hhble.bean.HHDeviceBean;
 import com.hhit.hhble.bean.HHFyyjArgu;
 import com.hhit.hhble.widget.xrecyclerview.XRecyclerView;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
@@ -14,9 +26,12 @@ import butterknife.BindView;
 
 public class HHDevicesActivity extends BaseActivity {
     final static String TAG = HHDevicesActivity.class.getSimpleName();
+    @BindView(R.id.bottomNavigationBar)
+    BottomNavigationBar mBottomNavigationBar;
 
-    @BindView(R.id.recyclerView)
-    XRecyclerView mRecyclerView;
+    private BaseFragment[] mFragments;
+
+
 
     @Override
     protected int layoutResId() {
@@ -25,80 +40,54 @@ public class HHDevicesActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        mRecyclerView.setPullRefreshEnabled(false);
-        startTransport();
+        initFragments();
+        initBottomNavigationBar();
     }
 
-//    /*********************************************文件上传***************************************************/
-//
-//    private void uploadeDo(){
-//        File file=new File("/storage/emulated/0/Download/11.jpg");
-//        RequestBody requestBody=RequestBody.create(MediaType.parse("image/jpeg"),file);
-//        MultipartBody.Part part= MultipartBody.Part.createFormData("file_name", file.getName(), new ProgressRequestBody(requestBody,
-//                new UploadProgressListener() {
-//                    @Override
-//                    public void onProgress(final long currentBytesCount, final long totalBytesCount) {
-//
-//                /*回到主线程中，可通过timer等延迟或者循环避免快速刷新数据*/
-//                        Observable.just(currentBytesCount).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Long>() {
-//
-//                            @Override
-//                            public void call(Long aLong) {
-//                                tvMsg.setText("提示:上传中");
-//                                progressBar.setMax((int) totalBytesCount);
-//                                progressBar.setProgress((int) currentBytesCount);
-//                            }
-//                        });
-//                    }
-//                }));
-//        UploadApi uplaodApi = new UploadApi(httpOnNextListener,this);
-//        uplaodApi.setPart(part);
-//        HttpManager manager = HttpManager.getInstance();
-//        manager.doHttpDeal(uplaodApi);
-//    }
-//
-//
-//    /**
-//     * 上传回调
-//     */
-//    HttpOnNextListener httpOnNextListener=new HttpOnNextListener<UploadResulte>() {
-//        @Override
-//        public void onNext(UploadResulte o) {
-//            tvMsg.setText("成功");
-//            Glide.with(MainActivity.this).load(o.getHeadImgUrl()).skipMemoryCache(true).into(img);
-//        }
-//
-//        @Override
-//        public void onError(Throwable e) {
-//            super.onError(e);
-//            tvMsg.setText("失败："+e.toString());
-//        }
-//
-//    };
+    private void initFragments(){
+        mFragments = new BaseFragment[2];
+        mFragments[0] = new HHBindFragment();
+        mFragments[1] = new HHTransportFragment();
+    }
 
-    HttpOnNextListener listener = new HttpOnNextListener() {
-        @Override
-        public void onNext(Object o) {
+    private void initBottomNavigationBar() {
+        mBottomNavigationBar.setMode(BottomNavigationBar.MODE_DEFAULT);
+        mBottomNavigationBar.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
+        mBottomNavigationBar.setActiveColor(R.color.color_985ec9);
+        mBottomNavigationBar.setBarBackgroundColor(R.color.color_white);
+        mBottomNavigationBar.addItem(new BottomNavigationItem(R.mipmap.btn_plus_w_nor,
+                "绑定"))
+                .addItem(new BottomNavigationItem(R.mipmap.tabbar_me_nor,
+                        "运输"))
+                .setFirstSelectedPosition(0)
+                .initialise();
+        mBottomNavigationBar.setTabSelectedListener(new BottomNavigationBar.SimpleOnTabSelectedListener() {
+                @Override
+                public void onTabSelected(int position) {
+                    showFragment(position);
+                }
+            }
+        );
 
+        mBottomNavigationBar.selectTab(0);
+        showFragment(0);
+    }
+
+    private void showFragment(int position){
+        BaseFragment fragment = mFragments[position];
+        FragmentTransaction ft = mContext.getSupportFragmentManager().beginTransaction();
+        android.support.v4.app.Fragment oldFragment = mContext.getSupportFragmentManager().findFragmentById(R.id.frameLayout);
+
+        if (oldFragment == null) {
+            ft.add(R.id.frameLayout, fragment);
+        } else {
+            ft.detach(oldFragment);
+            if (mFragments[position] == null) {
+                ft.add(R.id.frameLayout, fragment);
+            } else {
+                ft.attach(fragment);
+            }
         }
-    };
-
-    private void startTransport(){
-        HHStartTransportApi transportApi = new HHStartTransportApi(listener, this);
-        HHFyyjArgu hh_argu = new HHFyyjArgu();
-        HHFyyjArgu.FyyjArgu argu = new HHFyyjArgu.FyyjArgu();
-
-        List<String> labels = new ArrayList<>();
-        labels.add("1");
-        labels.add("2");
-        argu.setFyyjId("12345");
-        argu.setCarNum("huhuhu");
-        argu.setGpsDeviceId("hhit-gps");
-        argu.setString(labels);
-        hh_argu.setFyyjArgu(argu);
-
-        transportApi.setArgu(hh_argu);
-        HttpManager manager = HttpManager.getInstance();
-        manager.doHttpDeal(transportApi);
+        ft.commit();
     }
 }
