@@ -1,29 +1,16 @@
 package com.hhit.hhble;
 
-import android.util.Log;
-
 import com.hhit.hhble.api.HHStartTransportApi;
 import com.hhit.hhble.base.BaseActivity;
-import com.hhit.hhble.bean.HHBaseResponse;
 import com.hhit.hhble.bean.HHFyyjArgu;
 import com.hhit.hhble.widget.xrecyclerview.XRecyclerView;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.BaseResultEntity;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.upload.ProgressRequestBody;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.upload.UploadProgressListener;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 public class HHDevicesActivity extends BaseActivity {
     final static String TAG = HHDevicesActivity.class.getSimpleName();
@@ -94,11 +81,6 @@ public class HHDevicesActivity extends BaseActivity {
         public void onNext(Object o) {
 
         }
-
-        @Override
-        public void onError(Throwable e) {
-            super.onError(e);
-        }
     };
 
     private void startTransport(){
@@ -118,6 +100,5 @@ public class HHDevicesActivity extends BaseActivity {
         transportApi.setArgu(hh_argu);
         HttpManager manager = HttpManager.getInstance();
         manager.doHttpDeal(transportApi);
-
     }
 }

@@ -47,7 +47,7 @@ public abstract class BaseApi<T> implements Func1<BaseResultEntity<T>, T> {
     public BaseApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         setListener(listener);
         setRxAppCompatActivity(rxAppCompatActivity);
-        setShowProgress(false);
+        setShowProgress(true);
         setCache(false);
     }
 

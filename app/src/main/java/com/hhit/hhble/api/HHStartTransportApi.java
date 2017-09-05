@@ -29,7 +29,6 @@ public class HHStartTransportApi extends BaseApi {
 
     public HHStartTransportApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
-        setCache(false);
 //        setShowProgress(true);
 //        setCancel(true);
 
