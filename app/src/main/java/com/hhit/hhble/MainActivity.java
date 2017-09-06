@@ -47,8 +47,7 @@ public class MainActivity extends BaseActivity {
     private Handler mHandler;
     private static final int REQUEST_ENABLE_BT = 1;
     // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 3000;
-
+    private static final long SCAN_PERIOD = 12000;
 
     private  HHDeviceBean mDevice;
 
@@ -145,7 +144,6 @@ public class MainActivity extends BaseActivity {
         if (getSupportActionBar() != null){
             getSupportActionBar().setTitle("Devices");
         }
-        LoadingDialog.show(mContext);
         mHandler = new Handler();
         askBle();
         initData();
@@ -245,12 +243,20 @@ public class MainActivity extends BaseActivity {
 //            }, SCAN_PERIOD);
 
             mScanning = true;
-//            mLoadingDialog.show();
+            LoadingDialog.show(mContext);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mScanning = false;
+                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    LoadingDialog.dismiss(mContext);
+                }
+            }, SCAN_PERIOD);
+
             mBluetoothAdapter.startLeScan(mLeScanCallback);
         } else {
             mScanning = false;
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
-//            mLoadingDialog.dismiss();
         }
         invalidateOptionsMenu();
     }

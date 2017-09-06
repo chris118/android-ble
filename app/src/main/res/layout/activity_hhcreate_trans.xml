@@ -17,10 +17,35 @@
     </com.hhit.hhble.widget.NavigationBar>
 
     <LinearLayout
-        android:id="@+id/ll_gps"
+        android:id="@+id/ll_pai"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@+id/title_bar"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="车牌号码:" />
+
+        <EditText
+            android:id="@+id/et_pai"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:gravity="center_vertical"
+            android:hint="车牌号" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_gps"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/ll_pai"
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
@@ -34,7 +59,7 @@
             android:text="监控设备:" />
 
         <EditText
-            android:id="@+id/textView8"
+            android:id="@+id/et_gps"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="8"

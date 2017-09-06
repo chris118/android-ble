@@ -53,7 +53,7 @@ public class HHCreateTransActivity extends BaseActivity {
 
     private void initRecyCleView(){
         if(mAdapter == null){
-            mAdapter = new HHDevicesAdapter();
+            mAdapter = new HHDevicesAdapter(false);
         }
         mRecyclerView.setPullRefreshEnabled(false);
         LinearLayoutManager llmanager = new LinearLayoutManager(mContext);

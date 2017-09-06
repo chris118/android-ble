@@ -6,12 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
+import android.widget.Toast;
 
 import com.hhit.hhble.adapter.HHDevicesAdapter;
 import com.hhit.hhble.adapter.HHDevicesSelAdapter;
 import com.hhit.hhble.base.BaseActivity;
 import com.hhit.hhble.base.HHItemClickLitener;
 import com.hhit.hhble.bean.HHDeviceBean;
+import com.hhit.hhble.util.ToastUtils;
 import com.hhit.hhble.widget.NavigationBar;
 import com.hhit.hhble.widget.RecycleViewDivider;
 import com.hhit.hhble.widget.xrecyclerview.XRecyclerView;
@@ -46,9 +48,14 @@ public class HHDevicesSelActivity extends BaseActivity {
             @Override
             public void call(Object o) {
                 List<HHDeviceBean> selected_device = mAdapter.getSelectedItem();
-                Intent intent = new Intent(mContext, HHCreateTransActivity.class);
-                intent.putParcelableArrayListExtra("devices", (ArrayList<? extends Parcelable>) selected_device);
-                startActivity(intent);
+                if(selected_device.size() > 0){
+                    Intent intent = new Intent(mContext, HHCreateTransActivity.class);
+                    intent.putParcelableArrayListExtra("devices", (ArrayList<? extends Parcelable>) selected_device);
+                    startActivity(intent);
+                } else {
+                    ToastUtils.showToast(mContext, "至少选择一个物资");
+                }
+
             }
         });
     }

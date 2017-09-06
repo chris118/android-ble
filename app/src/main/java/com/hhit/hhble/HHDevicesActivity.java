@@ -67,7 +67,7 @@ public class HHDevicesActivity extends BaseActivity {
         mBottomNavigationBar.setActiveColor(R.color.color_985ec9);
         mBottomNavigationBar.setBarBackgroundColor(R.color.color_white);
         mBottomNavigationBar.addItem(new BottomNavigationItem(R.mipmap.tabbar_structure_nor,
-                "绑定"))
+                "封样物资"))
                 .addItem(new BottomNavigationItem(R.mipmap.tabbar_me_nor,
                         "运输"))
                 .setFirstSelectedPosition(0)

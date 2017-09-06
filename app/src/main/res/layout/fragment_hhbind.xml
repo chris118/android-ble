@@ -13,7 +13,7 @@
             android:id="@+id/title_bar"
             style="@style/style_navigation_bar"
             android:layout_width="match_parent"
-            app:nav_main_title="设备列表">
+            app:nav_main_title="物资列表">
 
         </com.hhit.hhble.widget.NavigationBar>
 

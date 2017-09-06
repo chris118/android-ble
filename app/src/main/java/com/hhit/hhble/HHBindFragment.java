@@ -47,7 +47,7 @@ public class HHBindFragment extends BaseFragment{
 
     private void initRecyCleView(){
         if(mAdapter == null){
-            mAdapter = new HHDevicesAdapter();
+            mAdapter = new HHDevicesAdapter(true);
         }
         mAdapter.setHhItemClickLitener(new HHItemClickLitener() {
             @Override
@@ -72,9 +72,9 @@ public class HHBindFragment extends BaseFragment{
 
     private void initData(){
         mDevices.add(new HHDeviceBean("hhh", 0, "ddd"));
+        mDevices.add(new HHDeviceBean("hhh", 1, "ddd"));
         mDevices.add(new HHDeviceBean("hhh", 0, "ddd"));
-        mDevices.add(new HHDeviceBean("hhh", 0, "ddd"));
-        mDevices.add(new HHDeviceBean("hhh", 0, "ddd"));
+        mDevices.add(new HHDeviceBean("hhh", 1, "ddd"));
 
         mAdapter.setData(mDevices);
     }
