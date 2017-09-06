@@ -5,7 +5,7 @@ package com.hhit.hhble.bean;
  */
 
 import java.util.List;
-public class HHFyyjArgu {
+public class HHFyyjArguBean {
 
     public static class FyyjArgu{
         private String fyyjId;
@@ -42,11 +42,11 @@ public class HHFyyjArgu {
         }
     }
 
-    public HHFyyjArgu.FyyjArgu getFyyjArgu() {
+    public HHFyyjArguBean.FyyjArgu getFyyjArgu() {
         return FyyjArgu;
     }
 
-    public void setFyyjArgu(HHFyyjArgu.FyyjArgu fyyjArgu) {
+    public void setFyyjArgu(HHFyyjArguBean.FyyjArgu fyyjArgu) {
         FyyjArgu = fyyjArgu;
     }
 

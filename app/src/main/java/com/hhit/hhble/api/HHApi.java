@@ -1,7 +1,5 @@
 package com.hhit.hhble.api;
 
-import com.hhit.hhble.bean.HHBaseResponse;
-import com.hhit.hhble.bean.HHFyyjArgu;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.BaseResultEntity;
 
 import okhttp3.RequestBody;

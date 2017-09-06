@@ -1,6 +1,6 @@
 package com.hhit.hhble.api;
 
-import com.hhit.hhble.bean.HHFyyjArgu;
+import com.hhit.hhble.bean.HHFyyjArguBean;
 import com.hhit.hhble.util.GsonUtil;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.BaseApi;
@@ -17,15 +17,15 @@ import rx.Observable;
 
 public class HHStartTransportApi extends BaseApi {
 
-    public HHFyyjArgu getArgu() {
+    public HHFyyjArguBean getArgu() {
         return argu;
     }
 
-    public void setArgu(HHFyyjArgu argu) {
+    public void setArgu(HHFyyjArguBean argu) {
         this.argu = argu;
     }
 
-    private HHFyyjArgu argu;
+    private HHFyyjArguBean argu;
 
     public HHStartTransportApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);

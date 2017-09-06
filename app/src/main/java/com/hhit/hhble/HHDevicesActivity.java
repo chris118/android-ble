@@ -1,28 +1,11 @@
 package com.hhit.hhble;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.view.View;
 
-import com.ashokvarma.bottomnavigation.BadgeItem;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-import com.hhit.hhble.adapter.HHDevicesAdapter;
-import com.hhit.hhble.api.HHStartTransportApi;
 import com.hhit.hhble.base.BaseActivity;
 import com.hhit.hhble.base.BaseFragment;
-import com.hhit.hhble.base.HHItemClickLitener;
-import com.hhit.hhble.bean.HHDeviceBean;
-import com.hhit.hhble.bean.HHFyyjArgu;
-import com.hhit.hhble.widget.NavigationBar;
-import com.hhit.hhble.widget.xrecyclerview.XRecyclerView;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 

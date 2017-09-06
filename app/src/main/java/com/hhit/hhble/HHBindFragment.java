@@ -9,7 +9,7 @@ import com.hhit.hhble.api.HHStartTransportApi;
 import com.hhit.hhble.base.BaseFragment;
 import com.hhit.hhble.base.HHItemClickLitener;
 import com.hhit.hhble.bean.HHDeviceBean;
-import com.hhit.hhble.bean.HHFyyjArgu;
+import com.hhit.hhble.bean.HHFyyjArguBean;
 import com.hhit.hhble.widget.RecycleViewDivider;
 import com.hhit.hhble.widget.xrecyclerview.XRecyclerView;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
@@ -91,8 +91,8 @@ public class HHBindFragment extends BaseFragment{
 
     private void startTransport(){
         HHStartTransportApi transportApi = new HHStartTransportApi(listener, mActivity);
-        HHFyyjArgu hh_argu = new HHFyyjArgu();
-        HHFyyjArgu.FyyjArgu argu = new HHFyyjArgu.FyyjArgu();
+        HHFyyjArguBean hh_argu = new HHFyyjArguBean();
+        HHFyyjArguBean.FyyjArgu argu = new HHFyyjArguBean.FyyjArgu();
 
         List<String> labels = new ArrayList<>();
         labels.add("1");
