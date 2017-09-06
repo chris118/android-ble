@@ -53,4 +53,14 @@ public class LoadingDialog extends Dialog {
         super.onStop();
         animation.stop();
     }
+
+    static LoadingDialog dialog;
+    public static void show(Context context){
+        dialog = new LoadingDialog(context);
+        dialog.show();
+    }
+
+    public static void dismiss(Context context){
+        dialog.dismiss();
+    }
 }

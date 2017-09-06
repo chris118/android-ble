@@ -22,9 +22,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".DeviceControlActivity"/> >
+        <activity android:name=".MainActivity" />
+        <activity android:name=".DeviceControlActivity" />
+        >
         <activity
             android:name=".HHDevicesActivity"
             android:launchMode="singleTask">
@@ -39,6 +39,10 @@
             android:name=".util.BluetoothLeService"
             android:enabled="true" />
 
+        <activity android:name=".HHBindActivity" />
+        <activity android:name=".HHDevicesSelActivity" />
+        <activity android:name=".HHCreateTransActivity"
+            ></activity>
     </application>
 
 </manifest>

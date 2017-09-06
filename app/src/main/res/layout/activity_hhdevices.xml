@@ -7,14 +7,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!--app:nav_left_icon="@drawable/back_selector"-->
-    <com.hhit.hhble.widget.NavigationBar
-        style="@style/style_navigation_bar"
-        android:layout_width="match_parent"
-        app:nav_main_title="设备列表">
-
-    </com.hhit.hhble.widget.NavigationBar>
-
     <!--<RelativeLayout-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent">-->

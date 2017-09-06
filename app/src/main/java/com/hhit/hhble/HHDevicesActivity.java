@@ -16,6 +16,7 @@ import com.hhit.hhble.base.BaseFragment;
 import com.hhit.hhble.base.HHItemClickLitener;
 import com.hhit.hhble.bean.HHDeviceBean;
 import com.hhit.hhble.bean.HHFyyjArgu;
+import com.hhit.hhble.widget.NavigationBar;
 import com.hhit.hhble.widget.xrecyclerview.XRecyclerView;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
@@ -32,8 +33,6 @@ public class HHDevicesActivity extends BaseActivity {
 
     private BaseFragment[] mFragments;
 
-
-
     @Override
     protected int layoutResId() {
         return R.layout.activity_hhdevices;
@@ -45,12 +44,16 @@ public class HHDevicesActivity extends BaseActivity {
         initBottomNavigationBar();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     private void setDefaultFragment()
     {
         mFragments = new BaseFragment[2];
         mFragments[0] = new HHBindFragment();
         mFragments[1] = new HHTransportFragment();
-
 
         FragmentTransaction transaction =  mContext.getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frameLayout, mFragments[0]);
@@ -78,7 +81,9 @@ public class HHDevicesActivity extends BaseActivity {
             }
         );
 
-        mBottomNavigationBar.selectTab(0);
+        int from = getIntent().getIntExtra("from", 0);
+        mBottomNavigationBar.selectTab(from);
+
 //        showFragment(1);
 //        showFragment(0);
     }

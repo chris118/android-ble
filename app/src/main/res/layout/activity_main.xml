@@ -9,6 +9,7 @@
 
     <!--app:nav_left_icon="@drawable/back_selector"-->
     <com.hhit.hhble.widget.NavigationBar
+        android:id="@+id/title_bar"
         style="@style/style_navigation_bar"
         android:layout_width="match_parent"
         app:nav_left_icon="@drawable/back_selector"

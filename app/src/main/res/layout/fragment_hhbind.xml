@@ -9,10 +9,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.hhit.hhble.widget.NavigationBar
+            android:id="@+id/title_bar"
+            style="@style/style_navigation_bar"
+            android:layout_width="match_parent"
+            app:nav_main_title="设备列表">
+
+        </com.hhit.hhble.widget.NavigationBar>
+
         <com.hhit.hhble.widget.xrecyclerview.XRecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_below="@+id/title_bar" />
     </RelativeLayout>
 
 </FrameLayout>

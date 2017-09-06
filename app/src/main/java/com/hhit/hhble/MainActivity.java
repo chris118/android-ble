@@ -28,6 +28,7 @@ import com.hhit.hhble.adapter.MainAdapter;
 import com.hhit.hhble.base.BaseActivity;
 import com.hhit.hhble.bean.HHDeviceBean;
 import com.hhit.hhble.util.Tools;
+import com.hhit.hhble.widget.LoadingDialog;
 import com.hhit.hhble.widget.RecycleViewDivider;
 
 import org.json.JSONException;
@@ -53,9 +54,6 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.id_recyclerview)
     RecyclerView mRecycleView;
-
-//    LoadingDialog mLoadingDialog;
-
 
     private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private HashMap<BluetoothDevice, Boolean> mDeviceList = new HashMap<>();
@@ -147,7 +145,7 @@ public class MainActivity extends BaseActivity {
         if (getSupportActionBar() != null){
             getSupportActionBar().setTitle("Devices");
         }
-//        mLoadingDialog = new LoadingDialog(this);
+        LoadingDialog.show(mContext);
         mHandler = new Handler();
         askBle();
         initData();
@@ -206,11 +204,12 @@ public class MainActivity extends BaseActivity {
                     index++;
                 }
 
-                Intent intent = new Intent(MainActivity.this, DeviceControlActivity.class);
+                Intent intent = new Intent(MainActivity.this, HHBindActivity.class);
                 intent.putExtra("label_address", address);
                 intent.putExtra("label_name", name);
+                intent.putExtra("device", mDevice);
 
-//                startActivity(intent);
+                startActivity(intent);
             }
 
             @Override
@@ -291,6 +290,9 @@ public class MainActivity extends BaseActivity {
                             mDeviceList.put(device, state);
                         }else {
                             mDeviceList.put(device, state);
+                        }
+                        if(mDeviceList.size() > 0){
+                            LoadingDialog.dismiss(mContext);
                         }
                         mAdapter.notifyDataSetChanged();
                     }
