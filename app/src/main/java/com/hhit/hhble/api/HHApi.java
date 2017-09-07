@@ -28,6 +28,6 @@ public interface HHApi {
                                                                     @Query("startPos") int startPos,
                                                                     @Query("count") int count);
 
-    @PUT("Fywz/Bind")
+    @PUT("fycj/Fywz/Bind")
     Observable<BaseResultEntity> bindMaterial(@Body HHFywzBindArgu body);
 }

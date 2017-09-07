@@ -4,7 +4,6 @@ import com.hhit.hhble.bean.HHFywzBindArgu;
 import com.hhit.hhble.bean.HHMaterialBean;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.BaseApi;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.BaseResultEntity;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
 
 import retrofit2.Retrofit;
@@ -25,7 +24,7 @@ public class HHBindApi extends BaseApi{
 
         HHFywzBindArgu argu = new HHFywzBindArgu();
         HHFywzBindArgu.FywzBindArgu fywz = new HHFywzBindArgu.FywzBindArgu();
-        fywz.setFywzId(1111);
+        fywz.setFywzId(device.getId());
         fywz.setBqId(labelAddress);
         argu.setFywzBindArgu(fywz);
 
