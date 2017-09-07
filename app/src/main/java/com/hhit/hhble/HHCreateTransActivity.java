@@ -11,6 +11,7 @@ import com.hhit.hhble.adapter.HHDevicesAdapter;
 import com.hhit.hhble.base.BaseActivity;
 import com.hhit.hhble.base.HHItemClickLitener;
 import com.hhit.hhble.bean.HHDeviceBean;
+import com.hhit.hhble.bean.HHMaterialBean;
 import com.hhit.hhble.widget.NavigationBar;
 import com.hhit.hhble.widget.RecycleViewDivider;
 import com.hhit.hhble.widget.xrecyclerview.XRecyclerView;
@@ -29,7 +30,7 @@ public class HHCreateTransActivity extends BaseActivity {
     @BindView(R.id.title_bar)
     NavigationBar mNavigationBar;
 
-    private List<HHDeviceBean> m_selected_devices;
+    private List<HHMaterialBean> m_selected_devices;
 
     @Override
     protected int layoutResId() {

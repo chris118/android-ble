@@ -20,6 +20,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -85,6 +86,12 @@ public class HttpManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 /*结果判断*/
                 .map(basePar);
+//                .map(new Func1() {
+//                    @Override
+//                    public Object call(Object o) {
+//                        return null;
+//                    }
+//                });
 
 
         /*链接式对象返回*/

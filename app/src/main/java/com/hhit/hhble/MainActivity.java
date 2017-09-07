@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.hhit.hhble.adapter.MainAdapter;
 import com.hhit.hhble.base.BaseActivity;
 import com.hhit.hhble.bean.HHDeviceBean;
+import com.hhit.hhble.bean.HHMaterialBean;
 import com.hhit.hhble.util.Tools;
 import com.hhit.hhble.widget.LoadingDialog;
 import com.hhit.hhble.widget.RecycleViewDivider;
@@ -49,7 +50,7 @@ public class MainActivity extends BaseActivity {
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 12000;
 
-    private  HHDeviceBean mDevice;
+    private HHMaterialBean mDevice;
 
     @BindView(R.id.id_recyclerview)
     RecyclerView mRecycleView;

@@ -57,7 +57,7 @@ public abstract class BaseApi<T> implements Func1<BaseResultEntity<T>, T> {
      * @param retrofit
      * @return
      */
-    public abstract Observable getObservable(Retrofit retrofit);
+    public abstract Observable<BaseResultEntity<T>> getObservable(Retrofit retrofit);
 
 
     public int getCookieNoNetWorkTime() {
@@ -182,11 +182,10 @@ public abstract class BaseApi<T> implements Func1<BaseResultEntity<T>, T> {
     @Override
     public T call(BaseResultEntity<T> httpResult) {
         if (httpResult.getCode() != 0) {
-            throw new HttpTimeException(httpResult.getMsg());
+            throw new HttpTimeException(httpResult.getMessage());
         }
         return httpResult.getData();
     }
-
 
     public String getCacheUrl() {
         return cacheUrl;

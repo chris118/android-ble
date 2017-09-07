@@ -55,7 +55,7 @@ dependencies {
     compile project(path: ':rxretrofitlibrary')
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:recyclerview-v7:23.2.0'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.3.0'
     compile 'com.jakewharton.rxbinding:rxbinding:1.0.0'

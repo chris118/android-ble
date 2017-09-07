@@ -5,11 +5,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
 import com.hhit.hhble.adapter.HHDevicesAdapter;
+import com.hhit.hhble.api.HHMaterialsApi;
 import com.hhit.hhble.api.HHStartTransportApi;
 import com.hhit.hhble.base.BaseFragment;
 import com.hhit.hhble.base.HHItemClickLitener;
-import com.hhit.hhble.bean.HHDeviceBean;
-import com.hhit.hhble.bean.HHFyyjArguBean;
+import com.hhit.hhble.bean.HHFyyjArgu;
+import com.hhit.hhble.bean.HHMaterialBean;
 import com.hhit.hhble.widget.RecycleViewDivider;
 import com.hhit.hhble.widget.xrecyclerview.XRecyclerView;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
@@ -27,7 +28,7 @@ public class HHBindFragment extends BaseFragment{
     @BindView(R.id.recyclerView)
     XRecyclerView mRecyclerView;
 
-    List<HHDeviceBean> mDevices = new ArrayList<>();
+    List<HHMaterialBean> mDevices = new ArrayList<>();
 
     @Override
     protected int layoutResId() {
@@ -37,12 +38,12 @@ public class HHBindFragment extends BaseFragment{
     @Override
     protected void initView() {
         initRecyCleView();
-        initData();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        initData();
     }
 
     private void initRecyCleView(){
@@ -71,28 +72,38 @@ public class HHBindFragment extends BaseFragment{
     }
 
     private void initData(){
-        mDevices.add(new HHDeviceBean("hhh", 0, "ddd"));
-        mDevices.add(new HHDeviceBean("hhh", 1, "ddd"));
-        mDevices.add(new HHDeviceBean("hhh", 0, "ddd"));
-        mDevices.add(new HHDeviceBean("hhh", 1, "ddd"));
+        mDevices.clear();
+        getMaterails();
+    }
 
-        mAdapter.setData(mDevices);
+    HttpOnNextListener listener = new HttpOnNextListener() {
+        @Override
+        public void onNext(Object o) {
+            List<HHMaterialBean> devices = (List<HHMaterialBean>) o;
+            mDevices.addAll(devices);
+            mAdapter.setData(mDevices);
+
+        }
+    };
+
+    private void getMaterails(){
+        HHMaterialsApi api = new HHMaterialsApi(listener, mActivity);
+        api.setStartPos(0);
+        api.setCount(20);
+        HttpManager manager = HttpManager.getInstance();
+        manager.doHttpDeal(api);
     }
 
 
 
 
-    HttpOnNextListener listener = new HttpOnNextListener() {
-        @Override
-        public void onNext(Object o) {
 
-        }
-    };
+
 
     private void startTransport(){
         HHStartTransportApi transportApi = new HHStartTransportApi(listener, mActivity);
-        HHFyyjArguBean hh_argu = new HHFyyjArguBean();
-        HHFyyjArguBean.FyyjArgu argu = new HHFyyjArguBean.FyyjArgu();
+        HHFyyjArgu hh_argu = new HHFyyjArgu();
+        HHFyyjArgu.FyyjArgu argu = new HHFyyjArgu.FyyjArgu();
 
         List<String> labels = new ArrayList<>();
         labels.add("1");
