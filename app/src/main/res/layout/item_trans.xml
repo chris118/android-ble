@@ -15,4 +15,12 @@
         android:gravity="center_vertical|center_horizontal"
         android:text="TextView" />
 
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical"
+        android:text="TextView" />
+
 </RelativeLayout>

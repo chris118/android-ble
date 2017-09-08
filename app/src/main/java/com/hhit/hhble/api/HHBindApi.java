@@ -4,6 +4,7 @@ import com.hhit.hhble.bean.HHFywzBindArgu;
 import com.hhit.hhble.bean.HHMaterialBean;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.BaseApi;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.BaseResultEntity;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
 
 import retrofit2.Retrofit;
@@ -13,7 +14,7 @@ import rx.Observable;
  * Created by chrisw on 2017/9/7.
  */
 
-public class HHBindApi extends BaseApi{
+public class HHBindApi extends BaseApi<BaseResultEntity>{
     public HHBindApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
     }

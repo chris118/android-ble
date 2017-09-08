@@ -1,6 +1,7 @@
 package com.hhit.hhble.api;
 
 import com.hhit.hhble.bean.HHFywzBindArgu;
+import com.hhit.hhble.bean.HHFyyjTransBean;
 import com.hhit.hhble.bean.HHMaterialBean;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.BaseResultEntity;
 
@@ -30,4 +31,8 @@ public interface HHApi {
 
     @PUT("fycj/Fywz/Bind")
     Observable<BaseResultEntity> bindMaterial(@Body HHFywzBindArgu body);
+
+    @GET("fycj/Fyyjs")
+    Observable<BaseResultEntity<List<HHFyyjTransBean>>> getTransList(@Query("startPos") int startPos,
+                                                                 @Query("count") int count);
 }

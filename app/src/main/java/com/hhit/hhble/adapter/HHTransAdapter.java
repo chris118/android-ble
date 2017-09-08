@@ -10,6 +10,7 @@ import com.hhit.hhble.base.BaseViewHolderHelper;
 import com.hhit.hhble.base.HHItemClickLitener;
 import com.hhit.hhble.base.RecyclerViewBaseAdapter;
 import com.hhit.hhble.bean.HHDeviceBean;
+import com.hhit.hhble.bean.HHFyyjTransBean;
 import com.hhit.hhble.bean.HHTransBean;
 
 import rx.functions.Action1;
@@ -18,7 +19,7 @@ import rx.functions.Action1;
  * Created by chrisw on 2017/9/5.
  */
 
-public class HHTransAdapter extends RecyclerViewBaseAdapter<HHTransBean> {
+public class HHTransAdapter extends RecyclerViewBaseAdapter<HHFyyjTransBean> {
     final static String TAG = HHTransAdapter.class.getSimpleName();
 
     @Override
@@ -28,13 +29,20 @@ public class HHTransAdapter extends RecyclerViewBaseAdapter<HHTransBean> {
 
     @Override
     public void onBindViewHolder(final BaseViewHolderHelper holder, final int position) {
-        final HHTransBean deviceBean = mData.get(position);
-        holder.setTextView(R.id.tv_name, deviceBean.getName());
+        final HHFyyjTransBean deviceBean = mData.get(position);
+        holder.setTextView(R.id.tv_name, deviceBean.getDateCreated());
+        if(deviceBean.getFyyjStatus().equals("none")){
+            holder.setTextView(R.id.tv_status, "未开始");
+        } else if(deviceBean.getFyyjStatus().equals("transferring")) {
+            holder.setTextView(R.id.tv_status, "运输中");
+        }
+
+
 
         clicks(holder.getItemView(), new Action1<Void>() {
             @Override
             public void call(Void aVoid) {
-                Log.d(TAG, deviceBean.getName());
+                Log.d(TAG, deviceBean.getDateCreated());
             }
         });
 
