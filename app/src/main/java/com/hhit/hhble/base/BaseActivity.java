@@ -23,7 +23,7 @@ import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * Created by andy on 16/9/14.
+ * Created by chrisw on 16/9/14.
  * 基础Activity
  */
 

@@ -15,7 +15,7 @@ import java.util.List;
 import rx.functions.Action1;
 
 /**
- * Created by huangds on 2016/3/19.
+ * Created by chriw on 2016/3/19.
  */
 public abstract class RecyclerViewBaseAdapter<T extends Object> extends RecyclerView.Adapter<BaseViewHolderHelper> {
 

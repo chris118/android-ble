@@ -82,7 +82,6 @@ public class HHBindFragment extends BaseFragment{
             List<HHMaterialBean> devices = (List<HHMaterialBean>) o;
             mDevices.addAll(devices);
             mAdapter.setData(mDevices);
-
         }
     };
 
@@ -93,12 +92,6 @@ public class HHBindFragment extends BaseFragment{
         HttpManager manager = HttpManager.getInstance();
         manager.doHttpDeal(api);
     }
-
-
-
-
-
-
 
     private void startTransport(){
         HHStartTransportApi transportApi = new HHStartTransportApi(listener, mActivity);

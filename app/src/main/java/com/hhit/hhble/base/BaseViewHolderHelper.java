@@ -19,7 +19,7 @@ import com.hhit.hhble.widget.fresco.ImageDraweeView;
 
 
 /**
- * Created by huangds on 2016/3/19.
+ * Created by chrisw on 2016/3/19.
  */
 public class BaseViewHolderHelper extends RecyclerView.ViewHolder {
 

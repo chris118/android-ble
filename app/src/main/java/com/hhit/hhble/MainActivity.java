@@ -303,7 +303,6 @@ public class MainActivity extends BaseActivity {
                         }
                         mAdapter.notifyDataSetChanged();
                     }
-
 //                    String address = device.getAddress(); //获取蓝牙设备mac地址
 //                    String name = device.getName();  //获取蓝牙设备名字
 //                    //Log.e(TAG, address);

@@ -20,7 +20,7 @@ import butterknife.Unbinder;
 import rx.functions.Action1;
 
 /**
- * Created by andy on 16/9/14.
+ * Created by chrisw on 16/9/14.
  * 基础Fragment
  */
 
